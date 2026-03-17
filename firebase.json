@@ -35,6 +35,15 @@
           }
         ]
       }
+    ],
+    "rewrites": [
+      {
+        "source": "/dashboard/**",
+        "run": {
+          "serviceId": "bpknews-dashboard",
+          "region": "us-central1"
+        }
+      }
     ]
   }
 }

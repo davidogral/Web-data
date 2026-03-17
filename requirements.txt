@@ -4,3 +4,4 @@ pandas
 plotly
 dash
 pytest
+gunicorn
