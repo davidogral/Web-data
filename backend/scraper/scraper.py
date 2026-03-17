@@ -1,4 +1,5 @@
 import logging
+from functools import lru_cache
 from bs4 import BeautifulSoup
 from typing import Iterable, List, Union
 
@@ -11,6 +12,20 @@ def _get_soup(html_content: str) -> BeautifulSoup:
     return BeautifulSoup(html_content, 'html.parser')
 
 
+@lru_cache(maxsize=8)
+def _cached_soup(html_content: str) -> BeautifulSoup:
+    """Cache simples para reutilizar parsing quando o mesmo HTML é usado várias vezes."""
+    return _get_soup(html_content)
+
+
+def parse_html(html_content: str) -> BeautifulSoup:
+    """
+    Faz o parse único do HTML e reutiliza cache para chamadas subsequentes
+    com o mesmo conteúdo, evitando custo repetido.
+    """
+    return _cached_soup(html_content)
+
+
 def _ensure_soup(html_content: SoupInput) -> BeautifulSoup:
     """
     Aceita HTML em string ou um objeto BeautifulSoup já criado.
@@ -19,7 +34,7 @@ def _ensure_soup(html_content: SoupInput) -> BeautifulSoup:
     if isinstance(html_content, BeautifulSoup):
         return html_content
     if isinstance(html_content, str):
-        return _get_soup(html_content)
+        return parse_html(html_content)
     # Entrada inválida/falsy → soup vazio para evitar exceptions
     return BeautifulSoup('', 'html.parser')
 

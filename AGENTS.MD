@@ -46,6 +46,7 @@ Web+data/
   3. **REFACTOR:** Refatorar o código para melhorar estrutura, legibilidade e performance sem quebrar os testes.
 - **Scraping Helper:** Para módulos de extração (ex: `scraper.py`), não instanciar o `BeautifulSoup` em cada função independentemente. Usar uma função auxiliadora (wrapper `_get_soup`) ou passar o objeto soup já instanciado para otimizar performance.
 - **Entrada flexível e validação:** Funções de extração devem aceitar HTML em `str` ou um objeto `BeautifulSoup` já criado, retornando listas vazias quando a entrada for inválida ou campos estiverem ausentes, evitando exceções.
+- **Cache de parsing:** Para múltiplas extrações sobre o mesmo HTML em uma execução, usar `parse_html` (com cache interno) ou reutilizar o mesmo objeto `BeautifulSoup` para evitar custo repetido de parsing.
 - **HTML Semântico:** Modificações na UI devem respeitar tags semânticas ( `<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).
 - **Nomenclatura de Classes CSS:** Padrões claros focados no componente (ex: `.card`, `.card-content`, `.card-meta`).
 
