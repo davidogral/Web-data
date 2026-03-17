@@ -47,6 +47,7 @@ Web+data/
 - **Scraping Helper:** Para módulos de extração (ex: `scraper.py`), não instanciar o `BeautifulSoup` em cada função independentemente. Usar uma função auxiliadora (wrapper `_get_soup`) ou passar o objeto soup já instanciado para otimizar performance.
 - **Entrada flexível e validação:** Funções de extração devem aceitar HTML em `str` ou um objeto `BeautifulSoup` já criado, retornando listas vazias quando a entrada for inválida ou campos estiverem ausentes, evitando exceções.
 - **Cache de parsing:** Para múltiplas extrações sobre o mesmo HTML em uma execução, usar `parse_html` (com cache interno) ou reutilizar o mesmo objeto `BeautifulSoup` para evitar custo repetido de parsing.
+- **Logging defensivo:** Funções de extração devem emitir warnings quando seletores não encontrarem itens ou atributos esperados, evitando falhas silenciosas.
 - **HTML Semântico:** Modificações na UI devem respeitar tags semânticas ( `<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).
 - **Nomenclatura de Classes CSS:** Padrões claros focados no componente (ex: `.card`, `.card-content`, `.card-meta`).
 
@@ -58,6 +59,8 @@ Web+data/
   - **Solução:** Os testes iniciais precisam ter os expects corretos e o código de origem precisa retornar um valor diferente (ex: `None` ou `pass`) em vez de código funcional, validando assim que o teste realmente testa o que deve no ambiente do Pytest. *[Resolvido em 17 Mar 2026]*
 - **Problema:** Falta de robustez ao lidar com HTML parcial/None causava exceções ou resultados inconsistentes.
   - **Solução:** Criados helpers `_ensure_soup` e `_extract_text` para validar entrada, normalizar texto/atributos e retornar listas vazias quando apropriado; todas as funções de extração (títulos, categorias, links, fontes, resumos, datas) utilizam esses helpers. *[Resolvido em 17 Mar 2026]*
+- **Problema:** Parse repetido do mesmo HTML e datas extras fora de `<article>` aumentavam custo e ruído nos resultados.
+  - **Solução:** Implementado cache via `parse_html` (LRU) e restrição de datas para `<article>`; adicionado logging de avisos para seletores vazios. *[Resolvido em 17 Mar 2026]*
 
 ## 5. Processos Operacionais
 
