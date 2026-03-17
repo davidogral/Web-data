@@ -51,6 +51,7 @@ Web+data/
 - **HTML Semântico:** Modificações na UI devem respeitar tags semânticas ( `<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).
 - **Nomenclatura de Classes CSS:** Padrões claros focados no componente (ex: `.card`, `.card-content`, `.card-meta`).
 - **Front-end funcional:** Funcionalidades de busca, filtros por categoria (chips), ticker, newsletter e layout hero devem ter comportamento implementado em `frontend/main.js`, com cobertura de testes em Jest (jsdom).
+- **Hosting/Cache:** Deploy via Firebase Hosting (`frontend` como public). HTML com `Cache-Control: no-store, must-revalidate`; assets estáticos (css/js/img) com cache longo (`public, max-age=31536000, immutable`).
 
 ## 4. Histórico de Problemas (Common Hurdles)
 
@@ -64,6 +65,8 @@ Web+data/
   - **Solução:** Implementado cache via `parse_html` (LRU) e restrição de datas para `<article>`; adicionado logging de avisos para seletores vazios. *[Resolvido em 17 Mar 2026]*
 - **Problema:** Funcionalidades do portal (busca/filtros/ticker/newsletter) não possuíam implementação nem testes.
   - **Solução:** Implementado `frontend/main.js` com filtros por categoria, busca reativa, ticker rotativo e confirmação de newsletter; adicionados testes Jest em jsdom validando filtro e chips. *[Resolvido em 17 Mar 2026]*
+- **Problema:** Navegador servindo HTML em cache após deploy no Firebase.
+  - **Solução:** Configurados headers no `firebase.json` para `no-store` em HTML e cache longo apenas para assets; redeploy concluído. *[Resolvido em 17 Mar 2026]*
 
 ## 5. Processos Operacionais
 
