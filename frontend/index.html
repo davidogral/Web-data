@@ -5,19 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BPKnews - Inteligência Artificial</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="header">
-        <h1>BPKnews</h1>
-        <p>O seu portal de Inteligência Artificial</p>
+    <header class="site-header">
+        <div class="brand">
+            <div class="brand-mark">BPK</div>
+            <div class="brand-text">
+                <p class="brand-kicker">Radar de IA</p>
+                <h1>BPKnews</h1>
+            </div>
+        </div>
+        <nav class="site-nav" aria-label="Menu principal">
+            <a href="#" class="nav-link active">Início</a>
+            <a href="#" class="nav-link">Modelos</a>
+            <a href="#" class="nav-link">Mercado</a>
+            <a href="#" class="nav-link">Pesquisa</a>
+            <a href="#" class="nav-link">Startups</a>
+        </nav>
+        <form class="search" role="search" aria-label="Buscar notícias">
+            <input type="search" name="q" placeholder="Buscar por tema, empresa ou modelo" aria-label="Campo de busca">
+            <button type="submit">Buscar</button>
+        </form>
     </header>
 
     <main class="main-content">
-        <section class="noticias">
+        <section class="hero">
+            <div class="hero-text">
+                <p class="eyebrow">Cobertura diária • Curadoria humana</p>
+                <h2>Inteligência Artificial em movimento</h2>
+                <p class="lead">Tendências, lançamentos de modelos e investimentos em IA em um painel rápido, com links para as fontes originais.</p>
+                <div class="hero-actions">
+                    <button class="btn primary" type="button">Receber briefing</button>
+                    <button class="btn ghost" type="button">Ver análises</button>
+                </div>
+            </div>
+            <div class="hero-aside" aria-label="Painel rápido">
+                <div class="ticker">
+                    <span class="ticker-label">Alertas</span>
+                    <div class="ticker-items" aria-live="polite">
+                        <span>Open-source LLMs ganham tração em empresas</span>
+                        <span>Investimentos em agentes autônomos sobem 22% no trimestre</span>
+                        <span>Novos benchmarks para code agents em discussão</span>
+                    </div>
+                </div>
+                <ul class="quick-stats">
+                    <li><strong>18</strong><span>lançamentos de modelos na semana</span></li>
+                    <li><strong>42</strong><span>releases de ferramentas open-source</span></li>
+                    <li><strong>12</strong><span>rodadas de investimento em IA</span></li>
+                </ul>
+            </div>
+        </section>
 
+        <section class="filters" aria-label="Filtros de notícias">
+            <div class="filter-badges">
+                <button type="button" class="chip active">Tudo</button>
+                <button type="button" class="chip">Modelos</button>
+                <button type="button" class="chip">Negócios</button>
+                <button type="button" class="chip">Pesquisa</button>
+                <button type="button" class="chip">Infra</button>
+            </div>
+            <div class="filter-meta">
+                <span class="dot live"></span>
+                <span>Atualizado em <time datetime="2026-03-17">17 Mar 2026</time></span>
+            </div>
+        </section>
+
+        <section class="noticias" aria-label="Últimas notícias">
             <article class="noticia card" data-category="tecnologia">
-                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600&h=300" alt="IA crescendo no Brasil">
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=900&h=500" alt="IA crescendo no Brasil">
                 <div class="card-content">
                     <div class="card-meta">
                         <span class="categoria">Tecnologia</span>
@@ -33,7 +89,7 @@
             </article>
 
             <article class="noticia card" data-category="negocios">
-                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600&h=300" alt="Python dominando mercado">
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=900&h=500" alt="Python dominando mercado">
                 <div class="card-content">
                     <div class="card-meta">
                         <span class="categoria">Negócios</span>
@@ -49,7 +105,7 @@
             </article>
 
             <article class="noticia card" data-category="tecnologia">
-                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600&h=300" alt="Claude Code">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=900&h=500" alt="Claude Code">
                 <div class="card-content">
                     <div class="card-meta">
                         <span class="categoria">Tecnologia</span>
@@ -63,8 +119,39 @@
                     </div>
                 </div>
             </article>
-
         </section>
+
+        <aside class="sidebar" aria-label="Painel lateral">
+            <section class="newsletter card">
+                <h3>Briefing matinal</h3>
+                <p>Receba em 5 minutos um resumo do que mudou em IA antes das 9h.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="seu@email.com" aria-label="E-mail">
+                    <button type="submit">Assinar</button>
+                </form>
+            </section>
+
+            <section class="curated-list card">
+                <h3>Leituras rápidas</h3>
+                <ul>
+                    <li><span class="pill">Infra</span> GPUs sob demanda ficam 18% mais caras na semana.</li>
+                    <li><span class="pill">Modelos</span> Novo benchmark de raciocínio para LLMs de código.</li>
+                    <li><span class="pill">Negócios</span> Fundo lança tese focada em agentes autônomos.</li>
+                </ul>
+            </section>
+        </aside>
     </main>
+
+    <footer class="site-footer">
+        <div>
+            <p class="footer-kicker">BPKnews</p>
+            <p>Portal de inteligência artificial com curadoria humana, foco em fontes originais e análise rápida.</p>
+        </div>
+        <div class="footer-links">
+            <a href="#">Contato</a>
+            <a href="#">Enviar notícia</a>
+            <a href="#">Sobre</a>
+        </div>
+    </footer>
 </body>
 </html>

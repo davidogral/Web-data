@@ -103,6 +103,9 @@ def extract_summaries(html_content: SoupInput) -> List[str]:
 def extract_dates(html_content: SoupInput) -> List[str]:
     """Extrai as datas no atributo datetime das tags <time>."""
     soup = _ensure_soup(html_content)
-    items = _extract_text((t for t in soup.find_all('time') if t.has_attr('datetime')), attr='datetime')
+    items = _extract_text(
+        (t for t in soup.select('article.noticia time[datetime]')),
+        attr='datetime',
+    )
     _log_if_empty(items, "datas")
     return items
