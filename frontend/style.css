@@ -236,6 +236,15 @@ body {
     font-size: 0.95rem;
 }
 
+.ticker-items span {
+    opacity: 0.45;
+    transition: opacity 0.35s ease;
+}
+
+.ticker-items span.visible {
+    opacity: 1;
+}
+
 .quick-stats {
     list-style: none;
     display: grid;
@@ -484,6 +493,15 @@ time {
     font-weight: 700;
     padding: 0.65rem 0.9rem;
     cursor: pointer;
+}
+
+.newsletter[data-state="submitted"]::after {
+    content: "Inscrição recebida. Em breve você recebe o briefing.";
+    display: block;
+    margin-top: 0.6rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .curated-list ul {
