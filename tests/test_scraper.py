@@ -22,7 +22,11 @@ def test_extract_titles():
     expected_titles = [
         "IA cresce no Brasil",
         "Python domina mercado",
-        "Claude Code domina mercado"
+        "Claude Code domina mercado",
+        "Open-source LLMs ganham tração",
+        "Investimentos em agentes autônomos sobem",
+        "GPUs sob demanda encarecem",
+        "Novo benchmark para code agents"
     ]
     assert titles == expected_titles
 
@@ -30,14 +34,30 @@ def test_extract_categories():
     """Deve extrair as categorias das notícias"""
     html_content = read_html()
     categories = extract_categories(html_content)
-    expected_categories = ["Tecnologia", "Negócios", "Tecnologia"]
+    expected_categories = [
+        "Tecnologia",
+        "Negócios",
+        "Tecnologia",
+        "Pesquisa",
+        "Negócios",
+        "Infra",
+        "Pesquisa",
+    ]
     assert categories == expected_categories
 
 def test_extract_links():
     """Deve extrair os links de 'Leia mais'"""
     html_content = read_html()
     links = extract_links(html_content)
-    expected_links = ["noticia1.html", "noticia2.html", "noticia3.html"]
+    expected_links = [
+        "noticia1.html",
+        "noticia2.html",
+        "noticia3.html",
+        "noticia4.html",
+        "noticia5.html",
+        "noticia6.html",
+        "noticia7.html",
+    ]
     assert links == expected_links
 
 
@@ -45,7 +65,15 @@ def test_extract_sources():
     """Deve extrair as fontes de cada notícia"""
     html_content = read_html()
     sources = extract_sources(html_content)
-    expected_sources = ["TechNews BR", "Dev Journal", "AI Daily"]
+    expected_sources = [
+        "TechNews BR",
+        "Dev Journal",
+        "AI Daily",
+        "AI Research Hub",
+        "Venture AI",
+        "Cloud Metrics",
+        "BenchLab",
+    ]
     assert sources == expected_sources
 
 
@@ -57,6 +85,10 @@ def test_extract_summaries():
         "Avanços importantes e investimentos crescentes impulsionam o setor tecnológico nacional.",
         "Empresas adotam cada vez mais Python para soluções de análise de dados e machine learning.",
         "Adoção em alta de assistentes autônomos transforma a engenharia de software.",
+        "Modelos abertos avançam em benchmarks e atraem contribuições corporativas.",
+        "Rodadas de Series A focadas em agentes crescem 22% no trimestre.",
+        "Preço-hora de instâncias com H100 sobe em média 18% na semana.",
+        "Comunidade discute métricas mais realistas para avaliar agentes de código.",
     ]
     assert summaries == expected_summaries
 
@@ -65,5 +97,13 @@ def test_extract_dates():
     """Deve extrair as datas no formato ISO do atributo datetime"""
     html_content = read_html()
     dates = extract_dates(html_content)
-    expected_dates = ["2026-03-17", "2026-03-16", "2026-03-15"]
+    expected_dates = [
+        "2026-03-17",
+        "2026-03-16",
+        "2026-03-15",
+        "2026-03-14",
+        "2026-03-13",
+        "2026-03-12",
+        "2026-03-11",
+    ]
     assert dates == expected_dates
