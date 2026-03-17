@@ -50,6 +50,7 @@ Web+data/
 - **Logging defensivo:** Funções de extração devem emitir warnings quando seletores não encontrarem itens ou atributos esperados, evitando falhas silenciosas.
 - **HTML Semântico:** Modificações na UI devem respeitar tags semânticas ( `<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).
 - **Nomenclatura de Classes CSS:** Padrões claros focados no componente (ex: `.card`, `.card-content`, `.card-meta`).
+- **Front-end funcional:** Funcionalidades de busca, filtros por categoria (chips), ticker, newsletter e layout hero devem ter comportamento implementado em `frontend/main.js`, com cobertura de testes em Jest (jsdom).
 
 ## 4. Histórico de Problemas (Common Hurdles)
 
@@ -61,6 +62,8 @@ Web+data/
   - **Solução:** Criados helpers `_ensure_soup` e `_extract_text` para validar entrada, normalizar texto/atributos e retornar listas vazias quando apropriado; todas as funções de extração (títulos, categorias, links, fontes, resumos, datas) utilizam esses helpers. *[Resolvido em 17 Mar 2026]*
 - **Problema:** Parse repetido do mesmo HTML e datas extras fora de `<article>` aumentavam custo e ruído nos resultados.
   - **Solução:** Implementado cache via `parse_html` (LRU) e restrição de datas para `<article>`; adicionado logging de avisos para seletores vazios. *[Resolvido em 17 Mar 2026]*
+- **Problema:** Funcionalidades do portal (busca/filtros/ticker/newsletter) não possuíam implementação nem testes.
+  - **Solução:** Implementado `frontend/main.js` com filtros por categoria, busca reativa, ticker rotativo e confirmação de newsletter; adicionados testes Jest em jsdom validando filtro e chips. *[Resolvido em 17 Mar 2026]*
 
 ## 5. Processos Operacionais
 
