@@ -187,6 +187,7 @@ def create_dash_app(flask_server: Flask) -> Dash:
         server=flask_server,
         url_base_pathname="/dashboard/",
         suppress_callback_exceptions=True,
+        external_stylesheets=["https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"],
     )
     protect_dash(dash_app)
 
@@ -208,27 +209,39 @@ def create_dash_app(flask_server: Flask) -> Dash:
         else pd.DataFrame(columns=["source", "count"])
     )
 
-    card_style = {"background": "#0f172a", "borderRadius": "14px", "padding": "16px", "boxShadow": "0 18px 40px -20px rgba(0,0,0,0.6)"}
-    title_style = {"margin": "0 0 8px 0", "letterSpacing": "-0.02em"}
+    card_style = {
+        "background": "#0f172a",
+        "borderRadius": "14px",
+        "padding": "16px",
+        "boxShadow": "0 18px 40px -20px rgba(0,0,0,0.6)",
+        "border": "1px solid rgba(255,255,255,0.06)",
+    }
+    title_style = {"margin": "0 0 8px 0", "letterSpacing": "-0.02em", "fontWeight": "700"}
 
     dash_app.layout = html.Div(
         style={
             "backgroundColor": "#0b1222",
             "color": "#f8fafc",
-            "padding": "28px",
+            "padding": "20px",
             "fontFamily": "Inter, sans-serif",
             "minHeight": "100vh",
+            "background": "radial-gradient(circle at 10% 20%, rgba(29, 209, 161, 0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(245, 158, 11, 0.08), transparent 30%), #0b1222",
         },
         children=[
             html.Div(
                 [
                     html.Div(
                         [
-                            html.P("BPKnews • Dashboard", style={"color": "#9fb3c8", "margin": 0}),
-                            html.H1("Visão Geral de Notícias", style={"margin": "4px 0 0 0"}),
+                            html.P("BPKnews • Dashboard", style={"color": "#9fb3c8", "margin": 0, "fontWeight": "600"}),
+                            html.H1("Visão Geral de Notícias", style={"margin": "4px 0 0 0", "letterSpacing": "-0.01em"}),
                         ]
                     ),
-                    html.A("Sair", href="/logout", style={"color": "#f87171", "fontWeight": "700"}),
+                    html.Div(
+                        [
+                            html.A("Portal", href="/", style={"color": "#1dd1a1", "marginRight": "12px", "fontWeight": "700"}),
+                            html.A("Sair", href="/logout", style={"color": "#f87171", "fontWeight": "700"}),
+                        ]
+                    ),
                 ],
                 style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "18px"},
             ),
@@ -270,13 +283,14 @@ def create_dash_app(flask_server: Flask) -> Dash:
                                             "x": category_counts["category"],
                                             "y": category_counts["count"],
                                             "type": "bar",
-                                            "marker": {"color": "#1dd1a1"},
+                                            "marker": {"color": "#1dd1a1", "line": {"color": "#0ea5e9", "width": 1}},
                                         }
                                     ],
                                     "layout": {
                                         "paper_bgcolor": "#0f172a",
                                         "plot_bgcolor": "#0f172a",
                                         "font": {"color": "#f8fafc"},
+                                        "height": 320,
                                         "margin": {"l": 40, "r": 10, "t": 10, "b": 40},
                                     },
                                 }
@@ -295,13 +309,14 @@ def create_dash_app(flask_server: Flask) -> Dash:
                                             "y": timeline["count"],
                                             "type": "scatter",
                                             "mode": "lines+markers",
-                                            "marker": {"color": "#0ea5e9"},
+                                            "marker": {"color": "#0ea5e9", "size": 9},
                                         }
                                     ],
                                     "layout": {
                                         "paper_bgcolor": "#0f172a",
                                         "plot_bgcolor": "#0f172a",
                                         "font": {"color": "#f8fafc"},
+                                        "height": 320,
                                         "margin": {"l": 40, "r": 10, "t": 10, "b": 40},
                                     },
                                 }
@@ -320,13 +335,14 @@ def create_dash_app(flask_server: Flask) -> Dash:
                                             "y": source_counts["source"],
                                             "type": "bar",
                                             "orientation": "h",
-                                            "marker": {"color": "#f59e0b"},
+                                            "marker": {"color": "#f59e0b", "line": {"color": "#1dd1a1", "width": 1}},
                                         }
                                     ],
                                     "layout": {
                                         "paper_bgcolor": "#0f172a",
                                         "plot_bgcolor": "#0f172a",
                                         "font": {"color": "#f8fafc"},
+                                        "height": 320,
                                         "margin": {"l": 120, "r": 10, "t": 10, "b": 40},
                                     },
                                 }

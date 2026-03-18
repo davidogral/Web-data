@@ -2,7 +2,7 @@
     --bg-color: #0b1222;
     --text-primary: #f8fafc;
     --text-secondary: #9fb3c8;
-    --card-bg: rgba(17, 24, 39, 0.85);
+    --card-bg: rgba(17, 24, 39, 0.9);
     --card-border: rgba(255, 255, 255, 0.06);
     --accent-color: #1dd1a1;
     --accent-hover: #10b981;
@@ -39,16 +39,16 @@ body {
 
 .site-header {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 1.1fr 1fr 1fr;
     align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem 1.5rem 1.25rem;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--card-border);
     backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 10;
-    background: rgba(11, 18, 34, 0.9);
+    background: rgba(11, 18, 34, 0.95);
 }
 
 .brand {
@@ -558,6 +558,7 @@ time {
     .site-header {
         grid-template-columns: 1fr;
         position: static;
+        gap: 0.75rem;
     }
 
     .site-nav {
@@ -566,6 +567,11 @@ time {
     }
 
     .hero {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+
+    .ticker {
         grid-template-columns: 1fr;
     }
 }
@@ -581,5 +587,10 @@ time {
 
     .site-footer {
         flex-direction: column;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
