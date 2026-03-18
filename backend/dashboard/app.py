@@ -9,11 +9,14 @@ from dash.dependencies import Input, Output
 from flask import Flask, redirect, render_template_string, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from backend.scraper.storage import save_news_to_db
+
 # Configurações básicas
 DB_PATH = os.environ.get("NEWS_DB_PATH", os.path.join(os.path.dirname(__file__), "..", "..", "news.db"))
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "davi.specia@gmail.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "davi123456789")
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "dev-secret-change-me")
+FRONTEND_HTML = os.environ.get("FRONTEND_HTML", os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "index.html"))
 
 
 # ---------- Helpers de dados ----------
@@ -64,6 +67,7 @@ def seed_admin(conn: sqlite3.Connection, email: str, password: str):
 def load_news_df() -> pd.DataFrame:
     conn = get_conn()
     ensure_schema(conn)
+    seed_news_if_empty(conn)
     df = pd.read_sql_query("SELECT * FROM news", conn)
     conn.close()
     if not df.empty:
@@ -91,6 +95,18 @@ def authenticate(email: str, password: str) -> bool:
 
 def current_user_role() -> Optional[str]:
     return session.get("role")
+
+
+def seed_news_if_empty(conn: sqlite3.Connection):
+    cursor = conn.execute("SELECT COUNT(*) FROM news")
+    count = cursor.fetchone()[0]
+    if count > 0:
+        return
+    if os.path.exists(FRONTEND_HTML):
+        html_content = open(FRONTEND_HTML, "r", encoding="utf-8").read()
+        save_news_to_db(html_content, db_path=DB_PATH)
+    else:
+        conn.commit()
 
 
 # ---------- Flask + Dash ----------
@@ -186,17 +202,67 @@ def create_dash_app(flask_server: Flask) -> Dash:
         if not df.empty
         else pd.DataFrame(columns=["date", "count"])
     )
+    source_counts = (
+        df.groupby("source").size().reset_index(name="count").sort_values("count", ascending=False)
+        if not df.empty
+        else pd.DataFrame(columns=["source", "count"])
+    )
+
+    card_style = {"background": "#0f172a", "borderRadius": "14px", "padding": "16px", "boxShadow": "0 18px 40px -20px rgba(0,0,0,0.6)"}
+    title_style = {"margin": "0 0 8px 0", "letterSpacing": "-0.02em"}
 
     dash_app.layout = html.Div(
-        style={"backgroundColor": "#0b1222", "color": "#f8fafc", "padding": "24px"},
+        style={
+            "backgroundColor": "#0b1222",
+            "color": "#f8fafc",
+            "padding": "28px",
+            "fontFamily": "Inter, sans-serif",
+            "minHeight": "100vh",
+        },
         children=[
-            html.H1("Dashboard BPKnews", style={"marginBottom": "8px"}),
-            html.P("Somente admins autenticados podem visualizar.", style={"color": "#9fb3c8"}),
             html.Div(
                 [
                     html.Div(
                         [
-                            html.H3("Notícias por categoria"),
+                            html.P("BPKnews • Dashboard", style={"color": "#9fb3c8", "margin": 0}),
+                            html.H1("Visão Geral de Notícias", style={"margin": "4px 0 0 0"}),
+                        ]
+                    ),
+                    html.A("Sair", href="/logout", style={"color": "#f87171", "fontWeight": "700"}),
+                ],
+                style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "18px"},
+            ),
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.P("Total de notícias", style={"color": "#9fb3c8", "margin": 0}),
+                            html.H2(str(len(df)), style={"margin": "4px 0 0 0"}),
+                        ],
+                        style=card_style,
+                    ),
+                    html.Div(
+                        [
+                            html.P("Categorias únicas", style={"color": "#9fb3c8", "margin": 0}),
+                            html.H2(str(category_counts.shape[0]), style={"margin": "4px 0 0 0"}),
+                        ],
+                        style=card_style,
+                    ),
+                    html.Div(
+                        [
+                            html.P("Fontes únicas", style={"color": "#9fb3c8", "margin": 0}),
+                            html.H2(str(source_counts.shape[0]), style={"margin": "4px 0 0 0"}),
+                        ],
+                        style=card_style,
+                    ),
+                ],
+                style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit,minmax(200px,1fr))", "gap": "12px", "marginBottom": "16px"},
+            ),
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.H3("Notícias por categoria", style=title_style),
                             dcc.Graph(
                                 figure={
                                     "data": [
@@ -207,15 +273,20 @@ def create_dash_app(flask_server: Flask) -> Dash:
                                             "marker": {"color": "#1dd1a1"},
                                         }
                                     ],
-                                    "layout": {"paper_bgcolor": "#0b1222", "plot_bgcolor": "#0b1222", "font": {"color": "#f8fafc"}},
+                                    "layout": {
+                                        "paper_bgcolor": "#0f172a",
+                                        "plot_bgcolor": "#0f172a",
+                                        "font": {"color": "#f8fafc"},
+                                        "margin": {"l": 40, "r": 10, "t": 10, "b": 40},
+                                    },
                                 }
                             ),
                         ],
-                        style={"flex": "1", "padding": "12px", "background": "#111827", "borderRadius": "12px"},
+                        style=card_style,
                     ),
                     html.Div(
                         [
-                            html.H3("Linha do tempo de publicações"),
+                            html.H3("Linha do tempo", style=title_style),
                             dcc.Graph(
                                 figure={
                                     "data": [
@@ -227,33 +298,44 @@ def create_dash_app(flask_server: Flask) -> Dash:
                                             "marker": {"color": "#0ea5e9"},
                                         }
                                     ],
-                                    "layout": {"paper_bgcolor": "#0b1222", "plot_bgcolor": "#0b1222", "font": {"color": "#f8fafc"}},
+                                    "layout": {
+                                        "paper_bgcolor": "#0f172a",
+                                        "plot_bgcolor": "#0f172a",
+                                        "font": {"color": "#f8fafc"},
+                                        "margin": {"l": 40, "r": 10, "t": 10, "b": 40},
+                                    },
                                 }
                             ),
                         ],
-                        style={"flex": "1", "padding": "12px", "background": "#111827", "borderRadius": "12px"},
+                        style=card_style,
                     ),
-                ],
-                style={"display": "flex", "gap": "12px", "flexWrap": "wrap"},
-            ),
-            html.Div(
-                [
-                    html.H3("Total de notícias"),
                     html.Div(
-                        f"{len(df)} registros armazenados",
-                        style={
-                            "padding": "12px",
-                            "background": "#111827",
-                            "borderRadius": "12px",
-                            "marginTop": "6px",
-                        },
+                        [
+                            html.H3("Top fontes", style=title_style),
+                            dcc.Graph(
+                                figure={
+                                    "data": [
+                                        {
+                                            "x": source_counts["count"],
+                                            "y": source_counts["source"],
+                                            "type": "bar",
+                                            "orientation": "h",
+                                            "marker": {"color": "#f59e0b"},
+                                        }
+                                    ],
+                                    "layout": {
+                                        "paper_bgcolor": "#0f172a",
+                                        "plot_bgcolor": "#0f172a",
+                                        "font": {"color": "#f8fafc"},
+                                        "margin": {"l": 120, "r": 10, "t": 10, "b": 40},
+                                    },
+                                }
+                            ),
+                        ],
+                        style=card_style,
                     ),
                 ],
-                style={"marginTop": "16px"},
-            ),
-            html.Div(
-                html.A("Sair", href="/logout", style={"color": "#f87171"}),
-                style={"marginTop": "12px"},
+                style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit,minmax(320px,1fr))", "gap": "16px"},
             ),
         ],
     )
